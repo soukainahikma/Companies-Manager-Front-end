@@ -16,8 +16,7 @@ import TheNavigation from './components/TheNavigation.vue'
 export default {
 	name: 'App',
 	components: {
-TheNavigation
-
+		TheNavigation
 	}
 }
 </script>

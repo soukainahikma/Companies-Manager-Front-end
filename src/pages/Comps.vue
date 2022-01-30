@@ -39,45 +39,79 @@ export default {
         this.companies = this.companies.filter((company) => company.id !== id);
       }
     },
-    addCompany(company) {
-      this.companies = [...this.companies, company];
+    async addCompany(company) {
+      // this.companies = [...this.companies, company];
+      await fetch(`http://localhost:3000/users/${document.cookie.split('=')[1]}/companies`,{
+          method: 'POST', 
+          mode: 'cors',
+          headers: {
+          'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(company)
+        })
+     .then(res => res.json())
+     .then(comps => {
+       this.companies = [...this.companies, comps]
+     }).catch(err => console.log(err))
     },
     triggerAddCompany(){
       this.showAddCompanies = !this.showAddCompanies;
     }
   },
-  created() {
-    
-    this.companies = [
-      {
-        id: 1,
-        company_name: "Company 1",
-        address: "Address very long so it looks cool",
-        email: "string@string.com",
-        start_date: "1/2/2022",
-        fiscal_date: "1/2/2022",
-        status: true
-      },
-      {
-        id: 2,
-        company_name: "Company 2",
-        address: "Address very long so it looks cool",
-        email: "string@string.com",
-        start_date: "1/2/2022",
-        fiscal_date: "1/2/2022",
-        status: true
-      },
-      {
-        id: 3,
-        company_name: "Company 3",
-        address: "Address very long so it looks cool",
-        email: "string@string.com",
-        start_date: "1/2/2022",
-        fiscal_date: "1/2/2022",
-        status: true
-      },
-    ];
+  async created() {
+    // document.cookie.split('=')[1];
+          console.log(`http://localhost:3000/users/${document.cookie.split('=')[1]}/companies`)
+    if (document.cookie.split('=')[1])
+      await fetch(`http://localhost:3000/users/${document.cookie.split('=')[1]}`)
+        .then(response =>{
+          return response.json()})
+        .then(data => {
+          if (data.statusCode === 400)
+          {
+            this.$router.push('/login');
+            return ;
+          }
+        });
+    else
+    {
+      this.$router.push('/login');
+      return ;
+    }
+    await fetch(`http://localhost:3000/users/${document.cookie.split('=')[1]}/companies`)
+     .then(res => res.json())
+     .then(comps => {
+       this.companies = [...comps]
+     }).catch(err => console.log(err))
   }
+    // this.companies = [
+    //   {
+    //     id: 1,
+    //     company_name: "Company 1",
+    //     address: "Address very long so it looks cool",
+    //     email: "string@string.com",
+    //     start_date: "1/2/2022",
+    //     fiscal_date: "1/2/2022",
+    //     status: true
+    //   },
+    //   {
+    //     id: 2,
+    //     company_name: "Company 2",
+    //     address: "Address very long so it looks cool",
+    //     email: "string@string.com",
+    //     start_date: "1/2/2022",
+    //     fiscal_date: "1/2/2022",
+    //     status: true
+    //   },
+    //   {
+    //     id: 3,
+    //     company_name: "Company 3",
+    //     address: "Address very long so it looks cool",
+    //     email: "string@string.com",
+    //     start_date: "1/2/2022",
+    //     fiscal_date: "1/2/2022",
+    //     status: true
+    //   },
+    // ];
 }
 </script>
 

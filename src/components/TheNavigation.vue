@@ -12,7 +12,7 @@
 					<li class="nav-item">
 						<router-link class="nav-link" to="/signup">Sign-up</router-link>
 					</li>
-					<li class="nav-item">
+					<li v-if="true" class="nav-item">
                             <router-link class="nav-link" to="/companies">Conpanies</router-link>
                         </li>
                         <li v-if="true" class="nav-item">

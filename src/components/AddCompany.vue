@@ -55,7 +55,6 @@ export default {
         return
       }
       const newCompany = {
-        id: Math.floor(Math.random() * 100000),
         company_name: this.company_name,
         address: this.company_name,
         email: this.email,
