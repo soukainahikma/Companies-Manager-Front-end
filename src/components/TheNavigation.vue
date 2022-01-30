@@ -12,10 +12,10 @@
 					<li class="nav-item">
 						<router-link class="nav-link" to="/signup">Sign-up</router-link>
 					</li>
-					<li v-if="true" class="nav-item">
+					<li class="nav-item">
                             <router-link class="nav-link" to="/companies">Conpanies</router-link>
                         </li>
-                        <li v-if="true" class="nav-item">
+                        <li class="nav-item">
                             <router-link class="nav-link" to="/users">Users</router-link>
                         </li>
 				</ul>
@@ -24,7 +24,47 @@
 	</nav>
 </template>
 <script>
- export default {}
+ export default {
+	name: 'TheNavigation',
+	methods: {
+		async isAdmin() {
+			if (document.cookie.split('=')[1])
+				await fetch(`http://localhost:3000/users/${document.cookie.split('=')[1]}`)
+				.then(response =>{
+				return response.json()})
+				.then(data => {
+					if (data.statusCode === 400)
+					{
+						this.$router.push('/login');
+						return false;
+					}
+					if (data.role !== "admin")
+						return (false);
+					else
+						return (true);
+				});
+			else
+				return (false);
+		},
+		async isLoggedIn() {
+			if (document.cookie.split('=')[1])
+				await fetch(`http://localhost:3000/users/${document.cookie.split('=')[1]}`)
+				.then(response =>{
+				return response.json()})
+				.then(data => {
+					console.log(data)
+					if (data.statusCode === 400)
+					{
+						this.$router.push('/login');
+						return false;
+					}
+						return (true);
+				});
+			else
+				return (false);
+		}
+	},
+ }
 </script>
 
 <style scoped>
