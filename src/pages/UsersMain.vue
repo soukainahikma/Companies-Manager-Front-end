@@ -2,70 +2,70 @@
   <div>
     <div class="wrapper">
       <div class="card">
-        <CompanyList @show-add-company-trigger="triggerAddCompany" title="Companies Tracker" />
-        <div v-if="showAddCompanies">
-          <AddCompany @add-company="addCompany"/>
+        <UserList @show-add-user-trigger="triggerAddUser" title="Users Tracker" />
+        <div v-if="showAddUsers">
+          <AddUser @add-user="addUser"/>
           <p style="text-align: center; color: red;"> {{this.err_msg}} </p>
         </div>
-        <Companies @delete-company="deleteCompanyGlobal " :companies="companies" />
+        <Users @delete-user="deleteUserGlobal " :users="usersArr" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import CompanyList from "../components/Companies/CompanyList.vue";
-import Companies from "../components/Companies/Companies.vue";
-import AddCompany from "../components/Companies/AddCompany.vue"
+import UserList from "../components/Users/UserList.vue";
+import Users from "../components/Users/Users.vue";
+import AddUser from "../components/Users/AddUser.vue"
 
 
 export default {
-  name: 'Comps',
+  name: 'UsersMain',
   components: {
-    CompanyList,
-    Companies,
-    AddCompany,
+    UserList,
+    Users,
+    AddUser,
   },
   data() {
     return {
-      showAddCompanies: false,
+      showAddUsers: false,
       err_msg: '',
-      companies: []
+      usersArr: []
     }
   },
   methods: {
-    deleteCompanyGlobal(id) {
+    deleteUserGlobal(id) {
       if (confirm("Are you sure?"))
       {
-        console.log("delete the company => ", id);
-        this.companies = this.companies.filter((company) => company.id !== id);
+        console.log("delete the user => ", id);
+        this.usersArr = this.usersArr.filter((user) => user.id !== id);
       }
     },
-    async addCompany(company) {
-      // this.companies = [...this.companies, company];
-      await fetch(`http://localhost:3000/users/${document.cookie.split('=')[1]}/companies`,{
+    async addUser(user) {
+      // this.users = [...this.users, company];
+      await fetch(`http://localhost:3000/users/`,{
           method: 'POST', 
           mode: 'cors',
           headers: {
           'Content-Type': 'application/json'
           },
-          body: JSON.stringify(company)
+          body: JSON.stringify(user)
         })
      .then(res => res.json())
-     .then(comps => {
-       console.log(comps)
-       if (comps.statusCode)
-        this.err_msg = comps.message;
+     .then(user => {
+       if (user.statusCode)
+        this.err_msg = user.message;
        else
-        this.companies = [...this.companies, comps]
+        this.usersArr = [...this.usersArr, user]
      }).catch(err => console.log(err))
     },
-    triggerAddCompany(){
-      this.showAddCompanies = !this.showAddCompanies;
+    triggerAddUser(){
+      this.showAddUsers = !this.showAddUsers;
     }
   },
   async created() {
     // document.cookie.split('=')[1];
+    console.log(`http://localhost:3000/users/${document.cookie.split('=')[1]}`)
     if (document.cookie.split('=')[1])
       await fetch(`http://localhost:3000/users/${document.cookie.split('=')[1]}`,  { 
         method: 'GET',
@@ -88,10 +88,11 @@ export default {
       this.$router.push('/login');
       return ;
     }
-    await fetch(`http://localhost:3000/users/${document.cookie.split('=')[1]}/companies`)
+    await fetch(`http://localhost:3000/users/`)
      .then(res => res.json())
-     .then(comps => {
-       this.companies = [...comps]
+     .then(users => {
+       console.log(users)
+       this.usersArr = [...users]
      }).catch(err => console.log(err))
   }
 

@@ -18,6 +18,9 @@ export default {
 	components: {
 		TheNavigation
 	}
+
+	//"serve": "export NODE_OPTIONS=--openssl-legacy-provider;vue-cli-service serve",
+
 }
 </script>
 
